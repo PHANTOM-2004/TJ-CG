@@ -27,6 +27,14 @@ protected:
   void updateVertices() override;
 
 private:
+  unsigned VBO_ = -1;
+  unsigned VAO_ = -1;
+  unsigned EBO_ = -1;
+
+  unsigned vertex_shader_ = -1;
+  unsigned frag_shader_ = -1;
+  unsigned shader_program_ = -1;
+
   // 在这里添加其他的点， 并且制定buffer， 显然可以得到更多的三角形
   std::unique_ptr<float[]> dynamic_vertices;
   static constexpr float static_vertices[] = {

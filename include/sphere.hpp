@@ -25,9 +25,17 @@ protected:
   void updateVertices() override {};
 
 private:
+  float const radius_;
+  unsigned VBO_ = -1;
+  unsigned VAO_ = -1;
+  unsigned EBO_ = -1;
   unsigned VAO_lines_ = -1;
   unsigned VBO_lines_ = -1;
-  float const radius_;
+
+  unsigned vertex_shader_ = -1;
+  unsigned frag_shader_ = -1;
+  unsigned shader_program_ = -1;
+
   static constexpr int sector_count_ = 50;
   static constexpr int stack_count_ = 30;
 

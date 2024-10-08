@@ -22,15 +22,7 @@ protected:
   int const width_, height_;
   GLFWwindow *window_ = nullptr;
 
-  unsigned VBO_ = -1;
-  unsigned VAO_ = -1;
-  unsigned EBO_ = -1;
-
-  unsigned vertex_shader_ = -1;
-  unsigned frag_shader_ = -1;
-  unsigned shader_program_ = -1;
-
-protected:
+  protected:
   // non-static member
   virtual void prepareShader() = 0;
 

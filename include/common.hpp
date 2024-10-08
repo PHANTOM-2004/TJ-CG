@@ -23,7 +23,14 @@
 
 #define ANSI_FMT(str, fmt) fmt str ANSI_NONE
 #define Log                                                                    \
-  std::clog << ANSI_FG_GREEN << "[" << __FILE__ << ":" << __LINE__       \
-            << " " << __func__ << "]" << ANSI_NONE
+  std::clog << ANSI_FG_GREEN << "[" << __FILE__ << ":" << __LINE__ << " "      \
+            << __func__ << "]" << ANSI_NONE
 
-
+inline void Status() {
+  Log << "fs base path[" << FS_BASE_PATH << "]" << std::endl;
+#ifdef BUILD_PLATFORM_WINDOWS
+  Log << "Build platform: " << ANSI_FMT("Windows", ANSI_FG_RED) << std::endl;
+#elif defined(BUILD_PLATFORM_LINUX)
+  Log << "Build platform: " << ANSI_FMT("Linux", ANSI_FG_RED) << std::endl;
+#endif
+}
