@@ -1,30 +1,9 @@
 #include "cube.hpp"
 #include "GLFW/glfw3.h"
-#include <exception>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <memory>
-
-static constexpr int BUFFER_SIZE = 512;
-
-static char infoLog[BUFFER_SIZE];
-
-static void framebuffer_size_callback(GLFWwindow *w, int const width,
-                                      int const height) {
-  glViewport(0, 0, width, height);
-}
-
-void Cube::processInput(GLFWwindow *w) {
-  // 如如果没有按下, 这里会返回RELEASE
-  int const ret = glfwGetKey(w, GLFW_KEY_Q);
-  if (ret) {
-    glfwSetWindowShouldClose(w, true);
-    std::cout << "got quit signal" << std::endl;
-  }
-}
-
-Cube::~Cube() { glfwTerminate(); }
 
 Cube::Cube() {
   dynamic_vertices = std::make_unique<float[]>(vertices_size);
@@ -37,7 +16,7 @@ void Cube::updateVertices() {
   float const t = 0.25f * std::cos(time * 2) + 0.75;
 
   // VBO buffer
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO_);
 
   for (int i = 0; i < 8; i++) {
     int const base_pos = 6 * i + 3;
@@ -62,7 +41,7 @@ void Cube::programDataSet() {
   static auto constexpr I = glm::mat4(1.0f);
   auto const rotate_angle = static_cast<float>(glfwGetTime());
   auto constexpr rotate_axle = glm::vec3(0.5f, 1.0f, 0.0f);
-  static auto constexpr aspect = static_cast<float>(1.0 * SCR_W / SCR_H);
+  static float const aspect = static_cast<float>(1.0 * width_ / height_);
 
   // M this changes
   auto const model = glm::rotate(I, rotate_angle, rotate_axle);
@@ -75,14 +54,14 @@ void Cube::programDataSet() {
       glm::perspective(glm::radians(45.0f), aspect, 0.1f, 100.0f);
 
   // remeber to use
-  glUseProgram(this->shaderProgram);
+  glUseProgram(this->shader_program_);
 
   static auto const model_location =
-      glGetUniformLocation(this->shaderProgram, "model");
+      glGetUniformLocation(this->shader_program_, "model");
   static auto const view_location =
-      glGetUniformLocation(this->shaderProgram, "view");
+      glGetUniformLocation(this->shader_program_, "view");
   static auto const projection_location =
-      glGetUniformLocation(this->shaderProgram, "projection");
+      glGetUniformLocation(this->shader_program_, "projection");
 
   glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(model));
   glUniformMatrix4fv(view_location, 1, GL_FALSE, glm::value_ptr(view));
@@ -102,7 +81,7 @@ void Cube::drawMainloop() {
   Log << "rendering" << std::endl;
 
   // keep drawing
-  while (!glfwWindowShouldClose(window)) {
+  while (!glfwWindowShouldClose(window_)) {
 
     float const current_time = static_cast<float>(glfwGetTime());
     frame_count++;
@@ -113,7 +92,7 @@ void Cube::drawMainloop() {
       last_time = current_time;
     }
 
-    processInput(window);
+    processInput(window_);
 
     // clear the screen first
     glClearColor(0.2f, 0.2f, 0.2f, 0.8f);
@@ -126,7 +105,7 @@ void Cube::drawMainloop() {
 
     // seeing as we only have a single VAO there's no need to bind it every
     // time, but we'll do so to keep things a bit more organized
-    glBindVertexArray(VAO);
+    glBindVertexArray(VAO_);
     // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     // The first argument specifies the mode we want to draw in, similar to
     // glDrawArrays. The second argument is the count or number of elements we'd
@@ -141,58 +120,37 @@ void Cube::drawMainloop() {
 
     updateVertices();
 
-    glfwSwapBuffers(window);
+    glfwSwapBuffers(window_);
     glfwPollEvents();
   }
 
   // release VAO, VBO, EBO, program
-  glDeleteVertexArrays(1, &VAO);
-  glDeleteBuffers(1, &VBO);
-  glDeleteBuffers(1, &EBO);
-  glDeleteProgram(shaderProgram);
-}
-
-void Cube::Draw() {
-
-  prepareWindow();
-
-  prepareGLAD();
-
-  prepareShader();
-
-  linkShader();
-
-  //  Oh yeah, and don't forget to delete the shader objects once we've linked
-  //  them into the program object; we no longer need them anymore:
-  shaderClean();
-
-  prepareBuffer();
-
-  prepareTexture();
-
-  drawMainloop();
+  glDeleteVertexArrays(1, &VAO_);
+  glDeleteBuffers(1, &VBO_);
+  glDeleteBuffers(1, &EBO_);
+  glDeleteProgram(shader_program_);
 }
 
 void Cube::shaderClean() {
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragmentShader);
+  glDeleteShader(vertex_shader_);
+  glDeleteShader(frag_shader_);
 }
 
 void Cube::prepareBuffer() {
-  glGenVertexArrays(1, &VAO);
-  glGenBuffers(1, &VBO);
-  glGenBuffers(1, &EBO);
+  glGenVertexArrays(1, &VAO_);
+  glGenBuffers(1, &VBO_);
+  glGenBuffers(1, &EBO_);
 
   // bind VAO
-  glBindVertexArray(VAO);
+  glBindVertexArray(VAO_);
 
   // VBO buffer
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO_);
   glBufferData(GL_ARRAY_BUFFER, sizeof(static_vertices), dynamic_vertices.get(),
                GL_DYNAMIC_DRAW);
 
   // EBO buffer
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
                GL_STATIC_DRAW);
 
@@ -210,59 +168,9 @@ void Cube::prepareBuffer() {
   glBindVertexArray(0);
 }
 
-void Cube::prepareGLAD() {
-  // initialize GLAD
-  // NOTE: 这实际上通过glad, 用于加载函数指针, gl的实现实际上是在运行时确定的
-  // 函数地址, 相当于开头的一个loader可以方便后续的流程, 否则需要一个一个typedef
-  // 再加上调用wglgetprocaddress去得到指针
-  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-    Log << "Failed to initialize GLAD" << std::endl;
-    exit(-1);
-  }
-}
-
-void Cube::prepareWindow() {
-  glfwInit();
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-  // create a window object
-  window = glfwCreateWindow(SCR_W, SCR_H, "LearnOpenGL", nullptr, nullptr);
-  if (!window) {
-    Log << "Failed to create GLFW window" << std::endl;
-    throw std::runtime_error(
-        "An error occurred! refer to the log for more information");
-  }
-  // This function makes the OpenGL or OpenGL ES context of the specified window
-  // current on the calling thread. It can also detach the current context from
-  // the calling thread without making a new one current by passing in NULL.
-  // NOTE: 从这里其实可以看出opengl的设计, attach与dettach往往是共用同一个接口的
-  glfwMakeContextCurrent(window);
-  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-}
-
-void Cube::prepareProgram(unsigned &p, unsigned const vshader,
-                          unsigned const fshader) {
-  int success;
-  // 这里是为了把所有的shader串联起来
-  p = glCreateProgram();
-  glAttachShader(p, vshader);
-  glAttachShader(p, fshader);
-  glLinkProgram(p);
-
-  glGetProgramiv(p, GL_LINK_STATUS, &success);
-  if (!success) {
-    glGetShaderInfoLog(p, BUFFER_SIZE, nullptr, infoLog);
-    Log << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-    throw std::runtime_error(
-        "An error occurred! refer to the log for more information");
-  }
-  Log << "INFO: shader link successfully" << std::endl;
-}
-
 void Cube::linkShader() {
-  prepareProgram(this->shaderProgram, this->vertexShader, this->fragmentShader);
+  prepareProgram(this->shader_program_, this->vertex_shader_,
+                 this->frag_shader_);
 }
 
 void Cube::prepareShader() {
@@ -276,42 +184,6 @@ void Cube::prepareShader() {
 #include "cubeShader.frag.glsl"
       ;
 
-  prepareVertexShader(this->vertexShader, vertexShaderSource);
-  prepareFragShader(this->fragmentShader, fragmentShaderSource);
-}
-
-void Cube::prepareFragShader(unsigned &f, char const *src) {
-  f = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(f, 1, &src, nullptr);
-  glCompileShader(f);
-
-  int success = -1;
-  glGetShaderiv(f, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    glGetShaderInfoLog(f, 512, nullptr, infoLog);
-    Log << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
-        << infoLog << std::endl;
-    throw std::runtime_error(
-        "An error occurred! refer to the log for more information");
-  }
-  Log << "INFO: fragment shader compiled successfully" << std::endl;
-}
-
-void Cube::prepareVertexShader(unsigned &v, char const *src) {
-  // vertex shader object
-  v = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(v, 1, &src, nullptr);
-  // compile vertex shader
-  glCompileShader(v);
-
-  int success = -1;
-  glGetShaderiv(v, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    glGetShaderInfoLog(v, BUFFER_SIZE, nullptr, infoLog);
-    Log << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
-        << infoLog << std::endl;
-    throw std::runtime_error(
-        "An error occurred! refer to the log for more information");
-  }
-  Log << "INFO: vertex shader compiled successfully" << std::endl;
+  prepareVertexShader(this->vertex_shader_, vertexShaderSource);
+  prepareFragShader(this->frag_shader_, fragmentShaderSource);
 }

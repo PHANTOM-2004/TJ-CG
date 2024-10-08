@@ -11,3 +11,9 @@ PS: 不要使用古老的编译器编译我的项。如果因此给我扣分，�
 PS: 及时更新的你的`MSVC`, 如果你发现了编译错误，旧版本的MSVC的预处理器存在`bug`，部分情况下无法正确处理`include`， 在最新版本已经修复。
 
 PS: 如果你用的Mac，那我也没办法，用Mac的话就自己解决吧。
+
+```shell
+cmake -S ./ -B ./build -GNinja
+cmake --build ./build --target xxx
+```
+

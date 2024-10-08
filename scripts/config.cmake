@@ -1,6 +1,6 @@
 
 function(default_config main_target_name)
-  message("${DEFAULT_INCLUDE}")
+  message("[default include]: ${DEFAULT_INCLUDE}")
   target_include_directories(${main_target_name} PRIVATE ${DEFAULT_INCLUDE})
   target_compile_definitions(${main_target_name} PRIVATE FS_BASE_PATH="${CMAKE_SOURCE_DIR}")
   message("[${main_target_name}]filesystem base path [${FS_BASE_PATH}]")
@@ -21,5 +21,6 @@ function(default_config main_target_name)
   else()
     # Unsupported
   endif()
+  message("-- end")
 
 endfunction()

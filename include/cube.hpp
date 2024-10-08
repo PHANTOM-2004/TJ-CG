@@ -3,64 +3,28 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include "elements.hpp"
 
-#include <common.hpp>
-#include <memory>
-
-class Cube {
+class Cube : public mygldraw::Elements {
 public:
-  void Draw();
   Cube();
-  virtual ~Cube();
 
 protected:
-  static void prepareFragShader(unsigned &v, char const *src);
+  void drawMainloop() override;
 
-  static void prepareVertexShader(unsigned &v, char const *src);
+  void prepareShader() override;
 
-  static void prepareProgram(unsigned &p, unsigned const vshader,
-                             unsigned const fshader);
+  void prepareTexture() override { Log << "unused" << std::endl; };
 
-  static void prepareTexture(unsigned &texture, int pixel_type,
-                             char const *path) {
-    Log << "function unused" << std::endl;
-  };
+  void linkShader() override;
 
-  virtual void prepareShader();
+  void programDataSet() override;
 
-  virtual void prepareTexture() { Log << "unused" << std::endl; };
+  void prepareBuffer() override;
 
-  virtual void linkShader();
+  void shaderClean() override;
 
-  virtual void programDataSet();
-
-  virtual void processInput(GLFWwindow *w);
-
-  void prepareWindow();
-
-  void prepareGLAD();
-
-  virtual void prepareBuffer();
-
-  virtual void shaderClean();
-
-  virtual void drawMainloop();
-
-  void updateVertices();
-
-protected:
-  GLFWwindow *window = nullptr;
-
-  unsigned VBO = -1;
-  unsigned VAO = -1;
-  unsigned EBO = -1;
-
-  unsigned vertexShader = -1;
-  unsigned fragmentShader = -1;
-  unsigned shaderProgram = -1;
-
-  static constexpr int SCR_W = 800;
-  static constexpr int SCR_H = 600;
+  void updateVertices() override;
 
 private:
   // 在这里添加其他的点， 并且制定buffer， 显然可以得到更多的三角形
