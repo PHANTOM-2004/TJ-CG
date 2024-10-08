@@ -34,7 +34,6 @@ include(scripts/config.cmake)
 # local lib
 add_subdirectory(lib/glfw-3.4/) # compile glfw3.4 locally
 add_subdirectory(lib/glad/) # compile glad
-add_subdirectory(lib/elements)
 
 # default flags
 set(MSVC_CXX_FLAGS /W3 /WX /utf-8)
@@ -46,11 +45,8 @@ set(DEFAULT_INCLUDE
   ${CMAKE_SOURCE_DIR}/shaders/
 )
 
-# libelements
-SET(ELEMENTS_SRC
-${CMAKE_SOURCE_DIR}/lib/elements/elements.cc
-${CMAKE_SOURCE_DIR}/lib/elements/shaders.cc
-)
+# lib for my project
+add_subdirectory(lib/elements)
 
 # other target
 add_subdirectory(src/cube/)
