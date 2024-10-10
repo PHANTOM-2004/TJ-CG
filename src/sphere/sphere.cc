@@ -156,20 +156,6 @@ void Sphere::programDataSet() {
                      glm::value_ptr(projection));
 }
 
-static void frame_count() {
-
-  static unsigned frame_count = 0;
-  static float last_time = 0;
-
-  float const current_time = static_cast<float>(glfwGetTime());
-  frame_count++;
-
-  if (current_time - last_time >= 1.0) {
-    std::clog << "[INFO]FPS: " << frame_count << '\r';
-    frame_count = 0;
-    last_time = current_time;
-  }
-}
 
 void Sphere::drawMainloop() {
   // mainloop;
@@ -180,7 +166,7 @@ void Sphere::drawMainloop() {
   // keep drawing
   while (!glfwWindowShouldClose(window_)) {
 
-    frame_count();
+    FrameCount();
 
     processInput(window_);
 

@@ -6,7 +6,12 @@
 // 暂定只存放坐标，颜色由uniform变量决定
 class Circle {
 public:
-  Circle(float radius, float x, float y, float z, unsigned count);
+  Circle(float radius, float x, float y, float z, unsigned count,
+         bool data = true);
+
+  ~Circle();
+
+  unsigned VertexArray() const { return VAO_; }
 
   unsigned VerticeSize() const {
     return VerticeCount() * static_cast<unsigned>(sizeof(float));
@@ -28,9 +33,15 @@ public:
 
   unsigned *IndiceData() { return indices_.data(); };
 
-  unsigned Stride() const { return static_cast<unsigned>(3 * sizeof(float)); }
+  virtual unsigned Stride() const {
+    return static_cast<unsigned>(3 * sizeof(float));
+  }
 
-private:
+  void PreprareBuffer();
+
+  void Draw();
+
+protected:
   void PrepareData();
 
   float const radius_;
@@ -41,4 +52,18 @@ private:
 
   std::vector<float> vertices_;
   std::vector<unsigned> indices_;
+
+  unsigned VAO_, VBO_, EBO_;
+};
+
+class CircleBound : public Circle {
+public:
+  CircleBound(float radius, float x, float y, float z, unsigned count);
+
+  unsigned Stride() const override {
+    return static_cast<unsigned>(2 * sizeof(float));
+  }
+
+private:
+  void PrepareData();
 };

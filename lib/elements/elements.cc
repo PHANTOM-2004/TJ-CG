@@ -3,6 +3,21 @@
 
 using mygldraw::Elements;
 
+void Elements::FrameCount() {
+  static unsigned frame_count = 0;
+  static float last_time = 0;
+
+  float const current_time = static_cast<float>(glfwGetTime());
+  frame_count++;
+
+  if (current_time - last_time >= 1.0) {
+    std::clog << "[INFO]FPS: " << frame_count << '\r';
+    frame_count = 0;
+    last_time = current_time;
+  }
+}
+
+
 static void framebuffer_size_callback(GLFWwindow *w, int const width,
                                       int const height) {
   glViewport(0, 0, width, height);

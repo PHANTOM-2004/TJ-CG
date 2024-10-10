@@ -76,21 +76,12 @@ void Cube::drawMainloop() {
   // mainloop;
   glEnable(GL_DEPTH_TEST);
 
-  static unsigned frame_count = 0;
-  static float last_time = 0;
   Log << "rendering" << std::endl;
 
   // keep drawing
   while (!glfwWindowShouldClose(window_)) {
 
-    float const current_time = static_cast<float>(glfwGetTime());
-    frame_count++;
-
-    if (current_time - last_time >= 1.0) {
-      std::clog << "[INFO]FPS: " << frame_count << '\r';
-      frame_count = 0;
-      last_time = current_time;
-    }
+    FrameCount();
 
     processInput(window_);
 

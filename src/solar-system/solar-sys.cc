@@ -18,23 +18,13 @@ void SolarSystem::drawMainloop() {
   // mainloop;
   glEnable(GL_DEPTH_TEST);
 
-  static unsigned frame_count = 0;
-  static float last_time = 0;
   Log << "rendering" << std::endl;
 
   // keep drawing
   while (!glfwWindowShouldClose(window_)) {
 
-    float const current_time = static_cast<float>(glfwGetTime());
-    frame_count++;
-
-    if (current_time - last_time >= 1.0) {
-      std::clog << "[INFO]FPS: " << frame_count << '\r';
-      frame_count = 0;
-      last_time = current_time;
-    }
-
     processInput(window_);
+    FrameCount();
 
     // clear the screen first
     glClearColor(0.2f, 0.2f, 0.2f, 0.8f);
@@ -45,19 +35,7 @@ void SolarSystem::drawMainloop() {
 
     programDataSet();
 
-    // seeing as we only have a single VAO there's no need to bind it every
-    // time, but we'll do so to keep things a bit more organized
-    glBindVertexArray(VAO_sun_);
-    // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    // The first argument specifies the mode we want to draw in, similar to
-    // glDrawArrays. The second argument is the count or number of elements we'd
-    // like to draw. We specified 6 indices so we want to draw 6 vertices in
-    // total. The third argument is the type of the indices which is of type
-    // GL_UNSIGNED_INT. The last argument allows us to specify an offset in the
-    // EBO (or pass in an index array, but that is when you're not using element
-    // buffer objects), but we're just going to leave this at 0.
-    //  glDrawElements(GL_TRIANGLES, , sizeof(vertices) / sizeof(vertices[0]));
-    glDrawElements(GL_TRIANGLES, Sun.IndiceCount(), GL_UNSIGNED_INT, 0);
+    Sun.Draw();
 
     updateVertices();
 
@@ -65,10 +43,6 @@ void SolarSystem::drawMainloop() {
     glfwPollEvents();
   }
 
-  // release VAO, VBO, EBO, program
-  glDeleteVertexArrays(1, &VAO_sun_);
-  glDeleteBuffers(1, &VBO_sun_);
-  glDeleteBuffers(1, &EBO_sun_);
   glDeleteProgram(shader_program_);
 }
 
@@ -110,28 +84,7 @@ void SolarSystem::programDataSet() {
 
 void SolarSystem::prepareBuffer() {
   // 首先prepare Sun的buffer用于测试
-
-  glGenVertexArrays(1, &VAO_sun_);
-  glGenBuffers(1, &VBO_sun_);
-  glGenBuffers(1, &EBO_sun_);
-
-  // VBO
-  glBindVertexArray(VAO_sun_);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO_sun_);
-  glBufferData(GL_ARRAY_BUFFER, Sun.VerticeSize(), Sun.VerticeData(),
-               GL_STATIC_DRAW);
-  // EBO
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_sun_);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, Sun.IndiceSize(), Sun.IndiceData(),
-               GL_STATIC_DRAW);
-
-  // 只有一个存放坐标的
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Sun.Stride(),
-                        static_cast<void *>(0));
-  glEnableVertexAttribArray(0);
-  // unbind
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
+  Sun.PreprareBuffer();
 }
 
 void SolarSystem::prepareShader() {

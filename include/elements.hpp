@@ -57,6 +57,8 @@ protected:
                              char const *path) {
     Log << "function unused" << std::endl;
   };
+
+  static void FrameCount();
 };
 
 }; // namespace mygldraw

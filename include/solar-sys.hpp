@@ -24,7 +24,6 @@ public:
 private:
   Circle Sun;
 
-  unsigned VAO_sun_ = 0, VBO_sun_ = 0, EBO_sun_ = 0;
 
   unsigned vertex_shader_ = 0, frag_shader_ = 0, shader_program_ = 0;
 };
