@@ -16,7 +16,19 @@ public:
     return static_cast<unsigned>(vertices_.size());
   };
 
+  unsigned IndiceCount() const {
+    return static_cast<unsigned>(indices_.size());
+  };
+
+  unsigned IndiceSize() const {
+    return IndiceCount() * static_cast<unsigned>(sizeof(float));
+  };
+
   float *VerticeData() { return vertices_.data(); };
+
+  unsigned *IndiceData() { return indices_.data(); };
+
+  unsigned Stride() const { return static_cast<unsigned>(3 * sizeof(float)); }
 
 private:
   void PrepareData();

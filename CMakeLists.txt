@@ -52,3 +52,4 @@ add_subdirectory(lib/circle)
 # other target
 add_subdirectory(src/cube/)
 add_subdirectory(src/sphere/)
+add_subdirectory(src/solar-system/)
