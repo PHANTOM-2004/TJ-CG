@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/sphere.dir/main.cc.o CMakeFiles/sphere.dir/sphere.cc.o -o /home/yt-chen/Projects/opengl/TJ-CG/target/sphere  -lelements ../../lib/glad/libglad.a ../../lib/glfw-3.4/src/libglfw3.a /usr/lib/libGLX.so /usr/lib/libOpenGL.so /usr/lib/librt.a -lm -ldl

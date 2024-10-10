@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/neon_cube.dir/cube.cc.o CMakeFiles/neon_cube.dir/neon_cube.cc.o -o /home/yt-chen/Projects/opengl/TJ-CG/target/neon_cube  ../../lib/glad/libglad.a ../../lib/glfw-3.4/src/libglfw3.a /usr/lib/libGLX.so /usr/lib/libOpenGL.so /usr/lib/librt.a -lm -ldl
