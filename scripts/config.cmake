@@ -5,9 +5,9 @@ function(default_config main_target_name)
   target_compile_definitions(${main_target_name} PRIVATE FS_BASE_PATH="${CMAKE_SOURCE_DIR}")
   message("[${main_target_name}]filesystem base path [${FS_BASE_PATH}]")
 
-  target_link_libraries(${main_target_name} PRIVATE OpenGL::GL)
+  target_link_libraries(${main_target_name} PUBLIC OpenGL::GL)
   # local glad and glfw
-  target_link_libraries(${main_target_name} PRIVATE glad glfw)
+  target_link_libraries(${main_target_name} PUBLIC glad glfw)
 
   # cross platform configuration
   if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")

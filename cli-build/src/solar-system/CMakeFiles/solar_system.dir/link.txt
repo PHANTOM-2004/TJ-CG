@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/solar_system.dir/main.cc.o CMakeFiles/solar_system.dir/planets.cc.o "CMakeFiles/solar_system.dir/solar-sys.cc.o" -o /home/yt-chen/Projects/opengl/TJ-CG/target/solar_system  ../../lib/glad/libglad.a ../../lib/glfw-3.4/src/libglfw3.a /usr/lib/libGLX.so /usr/lib/libOpenGL.so /usr/lib/librt.a -lm -ldl

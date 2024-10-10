@@ -45,9 +45,18 @@ set(DEFAULT_INCLUDE
   ${CMAKE_SOURCE_DIR}/shaders/
 )
 
-# lib for my project
-add_subdirectory(lib/elements)
-add_subdirectory(lib/circle)
+# common classes
+message("[COMMON] elements")
+file(GLOB_RECURSE ELEMENTS_SRC 
+"${CMAKE_SOURCE_DIR}/src/elements/*.cc"
+"${CMAKE_SOURCE_DIR}/src/elements/*.c")
+message(${ELEMENTS_SRC})
+
+message("[COMMON] circle")
+file(GLOB_RECURSE CIRCLE_SRC 
+"${CMAKE_SOURCE_DIR}/src/circle/*.cc"
+"${CMAKE_SOURCE_DIR}/src/circle/*.c")
+message(${CIRCLE_SRC})
 
 # other target
 add_subdirectory(src/cube/)
