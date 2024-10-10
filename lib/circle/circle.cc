@@ -9,6 +9,7 @@ static const float PI = std::acos(-1);
 
 static bool check(float const t) {
   if (t < -1.0f || t > 1.0f) {
+    std::cerr << "[ERROR] NOT NDC" << std::endl;
     std::runtime_error("not NDC");
     std::terminate();
   }
@@ -30,7 +31,7 @@ Circle::Circle(float const radius, float const x, float const y, float const z,
   }
 }
 
-Circle::~Circle() {
+void Circle::Clear() {
   glDeleteVertexArrays(1, &VAO_);
   glDeleteBuffers(1, &VBO_);
   glDeleteBuffers(1, &EBO_);
@@ -88,6 +89,7 @@ void Circle::PrepareData() {
     vertices_.emplace_back(xi);
     vertices_.emplace_back(yi);
     vertices_.emplace_back(z0);
+    // std::cout << xi << ' ' << yi << std::endl;
 
     if (i > 0 && i + 1 < count_) {
       indices_.emplace_back(0);
@@ -95,8 +97,6 @@ void Circle::PrepareData() {
       indices_.emplace_back(i + 1);
     }
   }
-  Log << VerticeSize() << std::endl;
-  Log << IndiceSize() << std::endl;
 }
 
 CircleBound::CircleBound(float const radius, float const x, float const y,

@@ -75,7 +75,7 @@ void Elements::prepareWindow() {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   // create a window object
-  window_ = glfwCreateWindow(SCR_W, SCR_H, "LearnOpenGL", nullptr, nullptr);
+  window_ = glfwCreateWindow(width_, height_, "LearnOpenGL", nullptr, nullptr);
   if (!window_) {
     Log << "Failed to create GLFW window" << std::endl;
     throw std::runtime_error(

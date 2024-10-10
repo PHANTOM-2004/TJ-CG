@@ -9,7 +9,7 @@ public:
   Circle(float radius, float x, float y, float z, unsigned count,
          bool data = true);
 
-  ~Circle();
+  void Clear();
 
   unsigned VertexArray() const { return VAO_; }
 
@@ -40,6 +40,16 @@ public:
   void PreprareBuffer();
 
   void Draw();
+
+  void SetColor(float r, float g, float b, float a) {
+    r_ = r, g_ = g, b_ = b, a_ = a;
+  }
+
+  float X() const { return x0; }
+  float Y() const { return y0; }
+  float Z() const { return z0; }
+
+  float r_, g_, b_, a_;
 
 protected:
   void PrepareData();

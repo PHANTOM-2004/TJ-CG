@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -6,8 +7,6 @@
 #include "GLFW/glfw3.h"
 #include "elements.hpp"
 #include "circle.hpp"
-
-SolarSystem::SolarSystem() : Sun(0.5f, 0, 0, 0.0f, 50) {}
 
 void SolarSystem::shaderClean() {
   glDeleteShader(vertex_shader_);
@@ -31,33 +30,44 @@ void SolarSystem::drawMainloop() {
     glClear(GL_COLOR_BUFFER_BIT |
             GL_DEPTH_BUFFER_BIT); // 这里取决于我们希望clear什么,
                                   // 这里我们只关心 color
-    // glUseProgram(shaderProgram);
 
-    programDataSet();
-
-    Sun.Draw();
-
-    updateVertices();
+    // 这里进入画的loop
+    programSetMVP(0); // 对于太阳，角速度为0
+    // sun_.Draw();
+    // 对于多个星星
+    for (size_t i = 0; i < planets_.size(); i++) {
+      programSetMVP(w_rate_[i]);
+      planets_[i].Draw();
+    }
 
     glfwSwapBuffers(window_);
     glfwPollEvents();
   }
 
+  for (auto &p : planets_) {
+    p.Clear();
+  }
   glDeleteProgram(shader_program_);
 }
 
-void SolarSystem::programDataSet() {
+void SolarSystem::programSetMVP(float const w_rate) {
   // prepare MVP data
   static auto constexpr I = glm::mat4(1.0f);
-  auto const rotate_angle = static_cast<float>(0);
-  auto constexpr rotate_axle = glm::vec3(0.5f, 1.0f, 0.0f);
+  auto const rotate_angle = static_cast<float>(glfwGetTime() * w_rate);
+  // 这里让绕着太阳所在的点旋转
+  static auto const rotate_axle = glm::vec3(0.0f, 0.0f, 1.0f);
   static float const aspect = static_cast<float>(1.0 * width_ / height_);
 
-  // M this changes
-  auto const model = glm::rotate(I, rotate_angle, rotate_axle);
+  // M 绕着 （x_0, y_0)进行旋转
+  auto model = I;
+  model = glm::translate(
+      model, glm::vec3(-planets_.front().X(), -planets_.front().Y(), 0.0f));
+  model = glm::rotate(model, rotate_angle, rotate_axle);
+  model = glm::translate(
+      model, glm::vec3(planets_.front().X(), planets_.front().Y(), 0.0f));
 
   // V we do not transform
-  static auto const view = glm::translate(I, glm::vec3(0.0f, 0.0f, -3.0f));
+  static auto const view = glm::translate(I, glm::vec3(0.0f, 0.0f, -2.0f));
 
   // P unchanged
   static auto const projection =
@@ -82,9 +92,14 @@ void SolarSystem::programDataSet() {
                      glm::value_ptr(projection));
 }
 
+void SolarSystem::programDataSet() { programSetMVP(0); }
+
 void SolarSystem::prepareBuffer() {
   // 首先prepare Sun的buffer用于测试
-  Sun.PreprareBuffer();
+
+  for (auto &p : planets_) {
+    p.PreprareBuffer();
+  }
 }
 
 void SolarSystem::prepareShader() {
