@@ -13,7 +13,7 @@ Cube::Cube() {
 
 void Cube::updateVertices() {
   auto const time = static_cast<float>(glfwGetTime());
-  float const t = 0.25f * std::cos(time * 2) + 0.75;
+  float const t = 0.25f * std::cos(time * 2) + 0.75f;
 
   // VBO buffer
   glBindBuffer(GL_ARRAY_BUFFER, VBO_);

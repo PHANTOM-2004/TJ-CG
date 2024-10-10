@@ -42,7 +42,7 @@ void Sphere::fillIndices() {
 }
 
 void Sphere::fillVertices() {
-  const float PI = std::acos(-1);
+  const float PI = std::acos(-1.0f);
   const float sector_step = 2 * PI / sector_count_;
   const float stack_step = PI / stack_count_;
 
@@ -190,7 +190,7 @@ void Sphere::drawMainloop() {
     // EBO (or pass in an index array, but that is when you're not using element
     // buffer objects), but we're just going to leave this at 0.
     //  glDrawElements(GL_TRIANGLES, , sizeof(vertices) / sizeof(vertices[0]));
-    glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, static_cast<unsigned>(indices_.size()), GL_UNSIGNED_INT, 0);
 
     updateVertices();
 

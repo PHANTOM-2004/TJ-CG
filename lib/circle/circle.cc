@@ -5,13 +5,12 @@
 #include <stdexcept>
 #include <cmath>
 
-static const float PI = std::acos(-1);
+static const float PI = std::acos(-1.0f);
 
 static bool check(float const t) {
   if (t < -1.0f || t > 1.0f) {
     std::cerr << "[ERROR] NOT NDC" << std::endl;
-    std::runtime_error("not NDC");
-    std::terminate();
+    throw std::runtime_error{"not NDC"};
   }
   return true;
 }
@@ -20,7 +19,7 @@ Circle::Circle(float const radius, float const x, float const y, float const z,
                unsigned const count, bool const data)
     : radius_(radius), x0(x), y0(y), z0(z), count_(count) {
   if (count_ <= 10) {
-    std::runtime_error("count should at least be 10");
+    throw std::runtime_error{"count should at least be 10"};
   }
   check(x);
   check(y);
@@ -37,7 +36,7 @@ void Circle::Clear() {
   glDeleteBuffers(1, &EBO_);
 }
 
-void Circle::Draw() {
+void Circle::Draw() const{
   glBindVertexArray(VertexArray());
   // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
   // The first argument specifies the mode we want to draw in, similar to

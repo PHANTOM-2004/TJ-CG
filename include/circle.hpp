@@ -39,7 +39,7 @@ public:
 
   void PreprareBuffer();
 
-  void Draw();
+  void Draw() const;
 
   void SetColor(float r, float g, float b, float a) {
     r_ = r, g_ = g, b_ = b, a_ = a;
@@ -49,7 +49,7 @@ public:
   float Y() const { return y0; }
   float Z() const { return z0; }
 
-  float r_, g_, b_, a_;
+  float r_ = 0.5f, g_ = 0.5f, b_ = 0.5f, a_ = 1.0f;
 
 protected:
   void PrepareData();
