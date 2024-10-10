@@ -12,6 +12,6 @@ add_executable(${MAIN_TARGET_NAME} ${PROJECT_SRCS}) # ${ELEMENTS_SRC})
 
 # link to lib
 add_dependencies(${MAIN_TARGET_NAME} elements circle)
-target_link_libraries(${MAIN_TARGET_NAME} PRIVATE elements circle)
+target_link_libraries(${MAIN_TARGET_NAME} PUBLIC elements circle)
 
 default_config(${MAIN_TARGET_NAME})
