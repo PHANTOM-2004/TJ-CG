@@ -1,0 +1,32 @@
+#pragma once
+
+#include <vector>
+
+// 用于获得circle的buffer
+// 暂定只存放坐标，颜色由uniform变量决定
+class Circle {
+public:
+  Circle(float radius, float x, float y, float z, unsigned count);
+
+  unsigned VerticeSize() const {
+    return VerticeCount() * static_cast<unsigned>(sizeof(float));
+  };
+
+  unsigned VerticeCount() const {
+    return static_cast<unsigned>(vertices_.size());
+  };
+
+  float *VerticeData() { return vertices_.data(); };
+
+private:
+  void PrepareData();
+
+  float const radius_;
+  float const x0;
+  float const y0;
+  float const z0;
+  unsigned const count_;
+
+  std::vector<float> vertices_;
+  std::vector<unsigned> indices_;
+};

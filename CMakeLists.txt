@@ -47,6 +47,7 @@ set(DEFAULT_INCLUDE
 
 # lib for my project
 add_subdirectory(lib/elements)
+add_subdirectory(lib/circle)
 
 # other target
 add_subdirectory(src/cube/)
