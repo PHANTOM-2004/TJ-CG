@@ -18,16 +18,13 @@ auto SolarSystem::Model(float x, float y, float z, float w_rate) {
   // NOTE:默认x右边
   model = glm::translate(model, glm::vec3(-x, -y, -z));
 
-  if (x > 1e-4f) {
-    // std::cout << x << ' ' << y << ' ' << z << '\n';
-  }
   return model;
 }
 
 auto SolarSystem::View() {
   auto constexpr I = glm::mat4(1.0f);
   // V we do not transform
-  static auto const view = glm::translate(I, glm::vec3(0.0f, 0.0f, -4.0f));
+  static auto const view = glm::translate(I, glm::vec3(0.0f, 0.0f, -2.0f));
   return view;
 }
 
