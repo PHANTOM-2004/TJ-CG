@@ -17,3 +17,19 @@ cmake -S ./ -B ./build -GNinja
 cmake --build ./build --target xxx
 ```
 
+- 第一次作业
+
+```shell
+cmake -S ./ -B ./build -GNinja
+cmake --build ./build --target neon_cube
+./target/neon_cube
+```
+
+- 第二次作业
+
+
+```shell
+cmake -S ./ -B ./build -GNinja
+cmake --build ./build --target solar_system
+./target/solar_system
+```
